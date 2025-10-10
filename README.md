@@ -44,7 +44,7 @@ The script:
 1. Open MATLAB and run the script:
 
    ```matlab
-   resistor_color_reader_en
+   resistor_reader
    ```
 
 2. Input the number of bands (**4 or 5**).  
