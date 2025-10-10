@@ -1,104 +1,109 @@
-% Resistor color reader script
+% Resistor Color Reader Script
 clear;
 close all;
 clc;
 
-% Dicionário de cores para valores e multiplicadores
-cores = struct('preto', 0, 'marrom', 1, 'vermelho', 2, 'laranja', 3, ...
-               'amarelo', 4, 'verde', 5, 'azul', 6, 'violeta', 7, ...
-               'cinza', 8, 'branco', 9, 'dourado', -1, 'prata', -2);
+% Color dictionary for values and multipliers
+colors = struct('black', 0, 'brown', 1, 'red', 2, 'orange', 3, ...
+                'yellow', 4, 'green', 5, 'blue', 6, 'violet', 7, ...
+                'gray', 8, 'white', 9, 'gold', -1, 'silver', -2);
 
-% Mapeamento de cores para RGB
-cores_rgb = struct('preto', [0, 0, 0], 'marrom', [0.6, 0.3, 0], 'vermelho', [1, 0, 0], ...
-                   'laranja', [1, 0.5, 0], 'amarelo', [1, 1, 0], 'verde', [0, 0.5, 0], ...
-                   'azul', [0, 0, 1], 'violeta', [0.5, 0, 0.5], 'cinza', [0.5, 0.5, 0.5], ...
-                   'branco', [1, 1, 1], 'dourado', [0.83, 0.68, 0.21], 'prata', [0.75, 0.75, 0.75]);
+% Color mapping for RGB visualization
+colors_rgb = struct('black', [0, 0, 0], 'brown', [0.6, 0.3, 0], 'red', [1, 0, 0], ...
+                    'orange', [1, 0.5, 0], 'yellow', [1, 1, 0], 'green', [0, 0.5, 0], ...
+                    'blue', [0, 0, 1], 'violet', [0.5, 0, 0.5], 'gray', [0.5, 0.5, 0.5], ...
+                    'white', [1, 1, 1], 'gold', [0.83, 0.68, 0.21], 'silver', [0.75, 0.75, 0.75]);
 
-multiplicador = [1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 0.1, 0.01];
-tolerancia_4faixas = {'marrom', 'vermelho', 'dourado', 'prata'};
-tolerancia_valores_4faixas = {'±1%', '±2%', '±5%', '±10%'};
-tolerancia_5faixas = {'marrom', 'vermelho', 'verde', 'azul', 'violeta'};
-tolerancia_valores_5faixas = {'±1%', '±2%', '±0.5%', '±0.25%', '±0.1%'};
+% Multipliers for each color
+multiplier = [1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 0.1, 0.01];
 
-% Escolha do tipo de resistor
-num_faixas = input('Quantas faixas tem o resistor (4 ou 5)? ');
+% Tolerance color options and values (4-band resistors)
+tolerance_4band = {'brown', 'red', 'gold', 'silver'};
+tolerance_values_4band = {'±1%', '±2%', '±5%', '±10%'};
 
-% Obtenção das cores conforme o número de faixas
-switch num_faixas
+% Tolerance color options and values (5-band resistors)
+tolerance_5band = {'brown', 'red', 'green', 'blue', 'violet'};
+tolerance_values_5band = {'±1%', '±2%', '±0.5%', '±0.25%', '±0.1%'};
+
+% Choose resistor type
+num_bands = input('How many bands does the resistor have (4 or 5)? ');
+
+% Get color inputs based on the number of bands
+switch num_bands
     case 4
-        faixa1 = lower(input('Digite a cor da primeira faixa: ', 's'));
-        faixa2 = lower(input('Digite a cor da segunda faixa: ', 's'));
-        faixa3 = lower(input('Digite a cor da terceira faixa (multiplicador): ', 's'));
-        faixa4 = lower(input('Digite a cor da quarta faixa (tolerância): ', 's'));
+        band1 = lower(input('Enter the color of the first band: ', 's'));
+        band2 = lower(input('Enter the color of the second band: ', 's'));
+        band3 = lower(input('Enter the color of the third band (multiplier): ', 's'));
+        band4 = lower(input('Enter the color of the fourth band (tolerance): ', 's'));
         
-        % Verificar se as cores são válidas
-        if ~isfield(cores, faixa1) || ~isfield(cores, faixa2) || ...
-           ~isfield(cores, faixa3) || ~isfield(cores, faixa4)
-            error('Uma ou mais cores digitadas são inválidas. Verifique as cores disponíveis.');
+        % Validate color names
+        if ~isfield(colors, band1) || ~isfield(colors, band2) || ...
+           ~isfield(colors, band3) || ~isfield(colors, band4)
+            error('One or more entered colors are invalid. Please check available colors.');
         end
         
-        % Cálculo do valor do resistor
-        valor_base = cores.(faixa1) * 10 + cores.(faixa2);
-        valor_resistor = valor_base * multiplicador(cores.(faixa3) + 1);
-        tolerancia = tolerancia_valores_4faixas{strcmp(tolerancia_4faixas, faixa4)};
+        % Calculate resistor value
+        base_value = colors.(band1) * 10 + colors.(band2);
+        resistor_value = base_value * multiplier(colors.(band3) + 1);
+        tolerance = tolerance_values_4band{strcmp(tolerance_4band, band4)};
         
         % Output
-        cores_faixas = {faixa1, faixa2, faixa3, faixa4};
-        valores_faixas = {num2str(cores.(faixa1)), num2str(cores.(faixa2)), ...
-                          ['10^', num2str(cores.(faixa3))], tolerancia};
+        band_colors = {band1, band2, band3, band4};
+        band_values = {num2str(colors.(band1)), num2str(colors.(band2)), ...
+                       ['10^', num2str(colors.(band3))], tolerance};
         
     case 5
-        faixa1 = lower(input('Digite a cor da primeira faixa: ', 's'));
-        faixa2 = lower(input('Digite a cor da segunda faixa: ', 's'));
-        faixa3 = lower(input('Digite a cor da terceira faixa: ', 's'));
-        faixa4 = lower(input('Digite a cor da quarta faixa (multiplicador): ', 's'));
-        faixa5 = lower(input('Digite a cor da quinta faixa (tolerância): ', 's'));
+        band1 = lower(input('Enter the color of the first band: ', 's'));
+        band2 = lower(input('Enter the color of the second band: ', 's'));
+        band3 = lower(input('Enter the color of the third band: ', 's'));
+        band4 = lower(input('Enter the color of the fourth band (multiplier): ', 's'));
+        band5 = lower(input('Enter the color of the fifth band (tolerance): ', 's'));
         
-        % Verificar se as cores são válidas
-        if ~isfield(cores, faixa1) || ~isfield(cores, faixa2) || ...
-           ~isfield(cores, faixa3) || ~isfield(cores, faixa4) || ...
-           ~isfield(cores, faixa5)
-            error('Uma ou mais cores digitadas são inválidas. Verifique as cores disponíveis.');
+        % Validate color names
+        if ~isfield(colors, band1) || ~isfield(colors, band2) || ...
+           ~isfield(colors, band3) || ~isfield(colors, band4) || ...
+           ~isfield(colors, band5)
+            error('One or more entered colors are invalid. Please check available colors.');
         end
         
-        % Cálculo do valor do resistor
-        valor_base = cores.(faixa1) * 100 + cores.(faixa2) * 10 + cores.(faixa3);
-        valor_resistor = valor_base * multiplicador(cores.(faixa4) + 1);
-        tolerancia = tolerancia_valores_5faixas{strcmp(tolerancia_5faixas, faixa5)};
+        % Calculate resistor value
+        base_value = colors.(band1) * 100 + colors.(band2) * 10 + colors.(band3);
+        resistor_value = base_value * multiplier(colors.(band4) + 1);
+        tolerance = tolerance_values_5band{strcmp(tolerance_5band, band5)};
         
         % Output
-        cores_faixas = {faixa1, faixa2, faixa3, faixa4, faixa5};
-        valores_faixas = {num2str(cores.(faixa1)), num2str(cores.(faixa2)), ...
-                          num2str(cores.(faixa3)), ['10^', num2str(cores.(faixa4))], tolerancia};
+        band_colors = {band1, band2, band3, band4, band5};
+        band_values = {num2str(colors.(band1)), num2str(colors.(band2)), ...
+                       num2str(colors.(band3)), ['10^', num2str(colors.(band4))], tolerance};
         
     otherwise
-        disp('Número de faixas inválido. Digite 4 ou 5.');
+        disp('Invalid number of bands. Please enter 4 or 5.');
         return;
 end
 
-clc
+clc;
 
-% Exibir resultado
-fprintf('\nValor do resistor: %.2f Ω %s\n', valor_resistor, tolerancia);
+% Display result
+fprintf('\nResistor value: %.2f Ω %s\n', resistor_value, tolerance);
 
-% Plotar quadrados com as cores e adicionar o valor do resistor acima das faixas
+% Plot color bands and display resistor value
 figure;
-for i = 1:num_faixas
-    subplot(2, num_faixas, i);
-    rectangle('Position', [0, 0, 1, 1], 'FaceColor', cores_rgb.(cores_faixas{i}), 'EdgeColor', 'k');
+for i = 1:num_bands
+    subplot(2, num_bands, i);
+    rectangle('Position', [0, 0, 1, 1], 'FaceColor', colors_rgb.(band_colors{i}), 'EdgeColor', 'k');
     axis off;
-    title(cores_faixas{i}, 'Interpreter', 'none'); % Nome da cor
+    title(band_colors{i}, 'Interpreter', 'none'); % Color name
 end
 
-% Exibir os valores das faixas abaixo dos quadrados
-for i = 1:num_faixas
-    subplot(2, num_faixas, num_faixas + i);
-    text(0.5, 0.5, valores_faixas{i}, 'HorizontalAlignment', 'center', 'Interpreter', 'none');
+% Display band values below the color squares
+for i = 1:num_bands
+    subplot(2, num_bands, num_bands + i);
+    text(0.5, 0.5, band_values{i}, 'HorizontalAlignment', 'center', 'Interpreter', 'none');
     axis off;
 end
 
-% Adicionar o valor do resistor acima das faixas
+% Add resistor value above the bands
 annotation('textbox', [0.2, 0.30, 0.6, 0.1], 'String', ...
-           sprintf('Resistor de %.2f Ω %s', valor_resistor, tolerancia), ...
+           sprintf('Resistor of %.2f Ω %s', resistor_value, tolerance), ...
            'HorizontalAlignment', 'center', 'FontSize', 12, 'FontWeight', 'bold', ...
            'EdgeColor', 'none');
