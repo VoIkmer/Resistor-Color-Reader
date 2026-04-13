@@ -66,8 +66,9 @@ The script:
 
 ![Resistor Color Band](images/resistor%20band.jpg)
 
-    Output Example: Graphical representation of the resistor. The script plots each color band as a square with 
-    its numeric value below, while the final calculated resistance and tolerance are displayed at the top.
+    Output Example: Graphical representation of the resistor. The script plots each color band
+    as a square with its numeric value below, while the final calculated resistance and 
+    tolerance are displayed at the top.
 
 ---
 
