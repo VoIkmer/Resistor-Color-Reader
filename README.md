@@ -88,12 +88,12 @@ The script:
 
 ## 🧑‍💻 Author
 
-**Carlos Eduardo Guimarães Barbosa**  
-Electrical Engineering Student | MATLAB Enthusiast  
+**Carlos Eduardo**  
+Electrical Engineering Student — UFBA
 
-📧 Contact: cguimaraesbarbosa03@gmail.com  
-🌐 GitHub: [VoIkmer](https://github.com/VoIkmer)  
-
+- Email: cguimaraesbarbosa03@gmail.com
+- GitHub: [VoIkmer](https://github.com/VoIkmer)
+- LinkedIn: [carl0sedu](https://www.linkedin.com/in/carl0sedu/)
 ---
 
 ## 📚 License
